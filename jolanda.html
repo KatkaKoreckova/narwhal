@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michal's Love Horoscope 🔮</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background: radial-gradient(ellipse at top, #0b0c1a 0%, #1f1a2f 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      padding: 50px 20px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      color: #ff6eb4;
+      margin-bottom: 0.3em;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #ff6eb4, 0 0 20px #ff6eb4;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      color: #ffd1dc;
+      margin-bottom: 2em;
+    }
+
+    .horoscope-card {
+      background: rgba(10, 10, 30, 0.85);
+      border-radius: 20px;
+      padding: 30px 25px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(255, 110, 180, 0.4);
+      margin-bottom: 30px;
+      transition: transform 0.3s;
+    }
+
+    .horoscope-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .prediction-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: #ff6eb4;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px #ff6eb4;
+    }
+
+    .prediction-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ffd1dc;
+    }
+
+    button {
+      background: #ff6eb4;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s, transform 0.2s;
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      background: #ff85c4;
+      transform: translateY(-2px);
+    }
+
+    .stars {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    footer {
+      margin-top: 30px;
+      font-style: italic;
+      color: #aaa;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Michal's Love Horoscope 🔮</h1>
+  <h2>Your cosmic guide to romance this week</h2>
+
+  <div class="horoscope-card">
+    <div class="prediction-title" id="predictionTitle">Your destiny awaits…</div>
+    <div class="prediction-text" id="predictionText">Click the button to reveal your weekly love horoscope!</div>
+    <button onclick="generateHoroscope()">Reveal Horoscope</button>
+  </div>
+
+  <footer>“The stars guide you, but your heart does the work.”</footer>
+
+  <script>
+    const horoscopes = [
+      "This week, Venus aligns perfectly with your sense of humor. A mysterious admirer will text you an unexpected joke. Keep your emojis ready.",
+      "Mars enters your dating sector. It's time to try something bold: smile at a stranger or talk to someone you've been crushing on in your dreams.",
+      "A cosmic comet passes by. You will find yourself in a social situation where everyone notices your charm, especially someone with sparkling eyes.",
+      "Saturn whispers: patience is key. Your crush may seem elusive, but a small compliment today could trigger a week of unexpected encounters.",
+      "Jupiter suggests a spontaneous adventure. A new connection might appear at the unlikeliest place — perhaps while walking your imaginary dog.",
+      "Mercury retrograde makes your texts confusing. Use memes wisely. Laughter will be your guide to romantic success this week.",
+      "The Moon shines on your optimism. Someone is admiring your quirks from afar; don't be shy to reveal your inner goofiness.",
+      "Stars indicate a playful twist: a sudden coffee spill or awkward compliment could lead to the most unforgettable encounter."
+    ];
+
+    const girlNames = ["Aurora", "Luna", "Nova", "Celeste", "Isabella", "Felicity", "Penelope", "Olivia", "Amara", "Vivian"];
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateHoroscope() {
+      const girl = randomItem(girlNames);
+      const horoscope = randomItem(horoscopes);
+      document.getElementById('predictionTitle').textContent = girl + " is your cosmic match!";
+      document.getElementById('predictionText').textContent = horoscope;
+    }
+
+    // Generate one on page load
+    generateHoroscope();
+
+    // Add twinkling stars
+    for (let i = 0; i < 50; i++) {
+      const star = document.createElement('div');
+      star.classList.add('stars');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      document.body.appendChild(star);
+    }
+  </script>
+</body>
+
+</html>
