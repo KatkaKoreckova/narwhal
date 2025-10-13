@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Which Imaginary Girl Are You Destined For? 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 0.3em;
+      color: #ff4b5c;
+    }
+
+    p.lead {
+      font-size: 1.2rem;
+      margin-bottom: 3em;
+      color: #6c757d;
+    }
+
+    .question {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px 35px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .question h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #495057;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #ff6b6b, #ff8787);
+      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    }
+
+    .options button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, #ff8787, #ff6b6b);
+    }
+
+    #result {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 20px;
+      color: #495057;
+      min-height: 2em;
+      padding: 20px 10px;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-style: italic;
+      color: #6c757d;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .question h2 {
+        font-size: 1.2rem;
+      }
+
+      .options button {
+        font-size: 1rem;
+        padding: 12px;
+      }
+
+      #result {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Which Imaginary Girl Are You Destined For?</h1>
+  <p class="lead">Answer the questions to reveal your perfect match 💫</p>
+
+  <div class="question" id="quiz"></div>
+  <div id="result"></div>
+
+  <footer>“Love is just a quiz away… or maybe a fantasy!”</footer>
+
+  <script>
+    const girls = [
+      { name: "Celestia", traits: ["outdoor", "summer", "adventurous", "coffee"] },
+      { name: "Lunara", traits: ["indoor", "winter", "bookish", "tea"] },
+      { name: "Aurora", traits: ["outdoor", "winter", "adventurous", "tea"] },
+      { name: "Isolde", traits: ["indoor", "summer", "creative", "coffee"] },
+      { name: "Seraphina", traits: ["outdoor", "summer", "bookish", "tea"] },
+      { name: "Ophelia", traits: ["indoor", "winter", "creative", "coffee"] },
+    ];
+
+    const questions = [
+      { q: "Do you prefer indoor or outdoor activities?", options: ["indoor", "outdoor"] },
+      { q: "Do you like summer or winter?", options: ["summer", "winter"] },
+      { q: "Are you adventurous, creative, or bookish?", options: ["adventurous", "creative", "bookish"] },
+      { q: "Coffee or tea?", options: ["coffee", "tea"] }
+    ];
+
+    let answers = [];
+    let currentQuestion = 0;
+
+    const quizDiv = document.getElementById("quiz");
+    const resultDiv = document.getElementById("result");
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        calculateResult();
+        return;
+      }
+
+      const question = questions[currentQuestion];
+      let html = `<h2>${question.q}</h2><div class="options">`;
+      question.options.forEach(opt => {
+        html += `<button onclick="selectAnswer('${opt}')">${opt.charAt(0).toUpperCase() + opt.slice(1)}</button>`;
+      });
+      html += `</div>`;
+      quizDiv.innerHTML = html;
+    }
+
+    function selectAnswer(option) {
+      answers.push(option);
+      currentQuestion++;
+      if (currentQuestion >= questions.length) {
+        calculateResult();
+      } else {
+        showQuestion();
+      }
+    }
+
+    function calculateResult() {
+      let bestMatch = null;
+      let maxScore = -1;
+
+      girls.forEach(girl => {
+        let score = 0;
+        answers.forEach(ans => {
+          if (girl.traits.includes(ans)) score++;
+        });
+        if (score > maxScore) {
+          maxScore = score;
+          bestMatch = girl.name;
+        }
+      });
+
+      quizDiv.innerHTML = ""; // Clear question area
+      resultDiv.textContent = `Your Imaginary Girl is… ${bestMatch}! 💖`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+
+</html>
