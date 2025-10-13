@@ -30,7 +30,7 @@
         }
 
         .container {
-            width: 100%;
+            width: max-content;
             max-width: 880px;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
             border-radius: 16px;
@@ -173,10 +173,9 @@
     <canvas id="confetti-canvas"></canvas>
     <main class="container" role="main">
         <header>
-            <div class="logo">GF</div>
             <div>
                 <h1 id="title">Girlfriend Countdown</h1>
-                <p class="lead">Countdown to New Year's Eve — your moment to find love (or at least try). ✨</p>
+                <p class="lead">How many days left until you’re supposed to find a girlfriend? ✨</p>
             </div>
         </header>
 
@@ -198,154 +197,28 @@
                 <div class="label">Seconds</div>
             </div>
         </section>
-
-        <section class="controls">
-            <label class="small muted">Your name</label>
-            <input id="friendName" type="text" placeholder="e.g. Alex" aria-label="Your name" />
-
-            <label class="small muted">Target</label>
-            <select id="preset">
-                <option value="nye">New Year's Eve (Dec 31, 23:59:59)</option>
-                <option value="custom">Custom date & time...</option>
-            </select>
-
-            <input id="customDate" type="datetime-local" style="display:none"
-                aria-label="Custom target date and time" />
-
-            <button id="shareBtn">Share</button>
-            <button id="resetBtn"
-                style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit">Reset</button>
-        </section>
-
-        <div class="footer">
-            <div class="small" id="message">Counting down to <strong id="targetLabel">New Year's Eve</strong> — get
-                ready to make your move!</div>
-            <div class="celebrate">
-                <div class="small">When the timer hits zero, the celebration begins.</div>
-            </div>
-        </div>
     </main>
 
     <script>
-        function getDefaultTarget() {
-            const now = new Date();
-            const year = now.getFullYear();
-            let target = new Date(year, 11, 31, 23, 59, 59);
-            if (now > target) target = new Date(year + 1, 11, 31, 23, 59, 59);
-            return target;
-        }
+        // Static target date: New Year's Eve, 2025
+        const target = new Date('December 31, 2025 23:59:59');
 
         const daysEl = document.getElementById('days');
         const hoursEl = document.getElementById('hours');
         const minutesEl = document.getElementById('minutes');
         const secondsEl = document.getElementById('seconds');
-        const friendNameInput = document.getElementById('friendName');
-        const preset = document.getElementById('preset');
-        const customDate = document.getElementById('customDate');
-        const targetLabel = document.getElementById('targetLabel');
         const message = document.getElementById('message');
-        const shareBtn = document.getElementById('shareBtn');
-        const resetBtn = document.getElementById('resetBtn');
 
-        function readStateFromHash() {
-            const hash = location.hash.slice(1);
-            if (!hash) return null;
-            const params = new URLSearchParams(hash);
-            const name = params.get('name');
-            const ts = params.get('ts');
-            return { name, ts: ts ? parseInt(ts, 10) : null };
-        }
-
-        function writeStateToHash(name, ts) {
-            const params = new URLSearchParams();
-            if (name) params.set('name', name);
-            if (ts) params.set('ts', '' + ts);
-            location.hash = params.toString();
-        }
-
-        let target = getDefaultTarget();
-
-        (function initFromHash() {
-            const s = readStateFromHash();
-            if (s) {
-                if (s.name) friendNameInput.value = s.name;
-                if (s.ts) {
-                    const t = new Date(s.ts);
-                    if (!isNaN(t)) target = t;
-                    targetLabel.textContent = labelForTarget(target);
-                }
-            }
-        })();
-
-        function labelForTarget(d) {
-            if (d.getDate() === 31 && d.getMonth() === 11 && d.getHours() === 23 && d.getMinutes() === 59) return "New Year's Eve";
-            return d.toLocaleString();
-        }
-
-        function updateMessage() {
-            const name = friendNameInput.value.trim() || 'you';
-            targetLabel.textContent = labelForTarget(target);
-            message.innerHTML = `Counting down to <strong>${targetLabel.textContent}</strong> — get ready, <strong>${name}</strong>!`;
-        }
-
-        updateMessage();
-
-        preset.addEventListener('change', () => {
-            if (preset.value === 'custom') {
-                customDate.style.display = 'inline-block';
-            } else {
-                customDate.style.display = 'none';
-                target = getDefaultTarget();
-                updateMessage();
-            }
-        });
-
-        customDate.addEventListener('change', () => {
-            const v = customDate.value;
-            if (!v) return;
-            const t = new Date(v);
-            if (isNaN(t)) return;
-            target = t;
-            updateMessage();
-        });
-
-        friendNameInput.addEventListener('input', updateMessage);
-
-        resetBtn.addEventListener('click', () => {
-            friendNameInput.value = '';
-            preset.value = 'nye';
-            customDate.value = '';
-            customDate.style.display = 'none';
-            target = getDefaultTarget();
-            writeStateToHash('', target.getTime());
-            updateMessage();
-        });
-
-        shareBtn.addEventListener('click', () => {
-            const name = friendNameInput.value.trim();
-            writeStateToHash(name, target.getTime());
-            const shareUrl = location.href;
-            if (navigator.share) {
-                navigator.share({ title: 'Girlfriend Countdown', text: `Countdown for ${name || 'me'}`, url: shareUrl }).catch(() => { });
-            } else {
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert('Link copied to clipboard — share it with your friends!');
-                }).catch(() => {
-                    prompt('Copy this link to share:', shareUrl);
-                });
-            }
-        });
-
-        let fired = false;
         function tick() {
             const now = new Date();
             const diff = target - now;
             if (diff <= 0) {
-                daysEl.textContent = '0'; hoursEl.textContent = '00'; minutesEl.textContent = '00'; secondsEl.textContent = '00';
-                if (!fired) {
-                    fired = true; onZero();
-                }
-                return;
+            daysEl.textContent = '0';
+            hoursEl.textContent = '00';
+            minutesEl.textContent = '00';
+            secondsEl.textContent = '00';
+            onZero();
+            return;
             }
             const sec = Math.floor(diff / 1000) % 60;
             const min = Math.floor(diff / 1000 / 60) % 60;
@@ -360,61 +233,74 @@
         setInterval(tick, 250);
         tick();
 
-        (function setupConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            let W = canvas.width = innerWidth;
-            let H = canvas.height = innerHeight;
-            window.addEventListener('resize', () => { W = canvas.width = innerWidth; H = canvas.height = innerHeight });
-
-            const pieces = [];
-            function rand(min, max) { return Math.random() * (max - min) + min }
-
-            function spawn(count) {
-                for (let i = 0; i < count; i++) {
-                    pieces.push({ x: rand(0, W), y: rand(-H, 0), vx: rand(-2, 2), vy: rand(2, 6), r: rand(6, 12), ttl: rand(3000, 6000), rot: rand(0, Math.PI * 2), vr: rand(-0.1, 0.1), color: `hsl(${Math.floor(rand(0, 360))} 90% 60%)` })
-                }
-            }
-
-            let last = performance.now();
-            function loop(t) {
-                const dt = t - last; last = t;
-                ctx.clearRect(0, 0, W, H);
-                for (let i = pieces.length - 1; i >= 0; i--) {
-                    const p = pieces[i];
-                    p.x += p.vx * (dt / 16);
-                    p.y += p.vy * (dt / 16);
-                    p.vy += 0.03 * (dt / 16);
-                    p.rot += p.vr * (dt / 16);
-                    p.ttl -= dt;
-                    ctx.save();
-                    ctx.translate(p.x, p.y);
-                    ctx.rotate(p.rot);
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
-                    ctx.restore();
-                    if (p.y > H + 50 || p.ttl <= 0) pieces.splice(i, 1);
-                }
-                requestAnimationFrame(loop);
-            }
-            requestAnimationFrame(loop);
-
-            window.startConfetti = function () { spawn(180); setTimeout(() => spawn(120), 350); }
-        })();
-
+        // Confetti animation and zero event
         function onZero() {
-            const name = friendNameInput.value.trim() || 'you';
-            message.innerHTML = `<strong>Time's up!</strong> — did you find someone, <strong>${name}</strong>? 🎉`;
+            message.innerHTML = `<strong>Time's up!</strong> — did you find someone yet? 🎉`;
             if (window.startConfetti) window.startConfetti();
             const old = document.getElementById('title').textContent;
             document.getElementById('title').textContent = 'HAPPY NEW YEAR!';
             setTimeout(() => document.getElementById('title').textContent = old, 6000);
         }
 
-        friendNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { shareBtn.click(); } });
+        (function setupConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let W = canvas.width = innerWidth;
+            let H = canvas.height = innerHeight;
+            window.addEventListener('resize', () => {
+            W = canvas.width = innerWidth;
+            H = canvas.height = innerHeight;
+            });
 
-        document.addEventListener('keydown', (e) => { if (e.key === 'Tab') document.body.classList.add('show-focus'); });
+            const pieces = [];
+            function rand(min, max) { return Math.random() * (max - min) + min; }
+
+            function spawn(count) {
+            for (let i = 0; i < count; i++) {
+                pieces.push({
+                x: rand(0, W),
+                y: rand(-H, 0),
+                vx: rand(-2, 2),
+                vy: rand(2, 6),
+                r: rand(6, 12),
+                ttl: rand(3000, 6000),
+                rot: rand(0, Math.PI * 2),
+                vr: rand(-0.1, 0.1),
+                color: `hsl(${Math.floor(rand(0, 360))} 90% 60%)`
+                });
+            }
+            }
+
+            let last = performance.now();
+            function loop(t) {
+            const dt = t - last; last = t;
+            ctx.clearRect(0, 0, W, H);
+            for (let i = pieces.length - 1; i >= 0; i--) {
+                const p = pieces[i];
+                p.x += p.vx * (dt / 16);
+                p.y += p.vy * (dt / 16);
+                p.vy += 0.03 * (dt / 16);
+                p.rot += p.vr * (dt / 16);
+                p.ttl -= dt;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+                ctx.restore();
+                if (p.y > H + 50 || p.ttl <= 0) pieces.splice(i, 1);
+            }
+            requestAnimationFrame(loop);
+            }
+            requestAnimationFrame(loop);
+
+            window.startConfetti = function () {
+            spawn(180);
+            setTimeout(() => spawn(120), 350);
+            };
+        })();
     </script>
+
 </body>
 
 </html>
