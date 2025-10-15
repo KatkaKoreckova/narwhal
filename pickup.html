@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Michal's Pickup Line Generator 💬</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top right, #ffe3e3, #dee2e6);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #212529;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #212529;
+      margin-bottom: 0.4em;
+    }
+
+    p.subtitle {
+      font-size: 1.2rem;
+      color: #495057;
+      margin-bottom: 2.5em;
+    }
+
+    .pickup-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 40px 30px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      font-size: 1.4rem;
+      line-height: 1.5;
+      font-weight: 500;
+      transition: all 0.4s ease;
+      position: relative;
+      min-height: 100px;
+    }
+
+    .pickup-line {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 0.4s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button {
+      margin-top: 2em;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #74c0fc, #5c7cfa);
+      color: #fff;
+      transition: all 0.3s;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #6c757d;
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Pickup Line Generator 💬</h1>
+  <p class="subtitle">Because sometimes, smooth talking needs a little help 😉</p>
+
+  <div class="pickup-box" id="pickupBox">
+    <div class="pickup-line" id="pickupLine">Click below to get your next line!</div>
+  </div>
+
+  <button id="generateBtn">Get Pickup Line</button>
+
+  <footer>“Use responsibly. Or irresponsibly — your choice.”</footer>
+
+  <script>
+    const pickupLines = [
+      "Are you a magician? Because whenever I look at you, everyone else disappears.",
+      "Do you have a map? I keep getting lost in your eyes.",
+      "If beauty were time, you'd be eternity.",
+      "Are you Wi-Fi? Because I'm feeling a strong connection.",
+      "Do you believe in love at first sight — or should I walk by again?",
+      "You must be tired, because you've been running through my mind all day.",
+      "If you were a vegetable, you’d be a cute-cumber.",
+      "Are you French? Because Eiffel for you.",
+      "I’m no photographer, but I can picture us together.",
+      "Do you have a Band-Aid? Because I just scraped my knee falling for you."
+    ];
+
+    const pickupLineElement = document.getElementById("pickupLine");
+    const generateBtn = document.getElementById("generateBtn");
+
+    generateBtn.addEventListener("click", () => {
+      const randomLine = pickupLines[Math.floor(Math.random() * pickupLines.length)];
+      pickupLineElement.classList.remove("pickup-line");
+      void pickupLineElement.offsetWidth; // Restart animation
+      pickupLineElement.textContent = randomLine;
+      pickupLineElement.classList.add("pickup-line");
+    });
+  </script>
+</body>
+
+</html>
